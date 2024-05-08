@@ -1,10 +1,32 @@
-"use client"
-import { useState } from "react"
+"use client";
+import { FormEvent, useState } from "react";
+
+const isValidProductUrl = (url: string) => {
+  try {
+    const parsedUrl = new URL(url);
+    const hostName = parsedUrl.hostname;
+    console.log(hostName)
+    console.log('dasdas')
+    if(hostName.includes('amazon.com') || hostName.includes('amazon.')){
+      return true;
+    }
+  }catch(error) {
+    console.log(error);
+    return false;
+  }
+
+  return false;
+}
 
 const SearchBar = () => {
-  const [searchPrompt, setSearchPrompt] = useState('')
+  const [searchPrompt, setSearchPrompt] = useState('');
   
-  const handleSubmit = () => {}
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const isValidLink = isValidProductUrl(searchPrompt);
+    alert(isValidLink ? 'Valid link' : 'Invalid link')
+  }
 
   return (
     <form 
