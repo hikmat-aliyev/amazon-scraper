@@ -2,18 +2,12 @@
 import { FormEvent, useState } from "react";
 
 const isValidProductUrl = (url: string) => {
-  try {
-    const parsedUrl = new URL(url);
-    const hostName = parsedUrl.hostname;
-    console.log(hostName)
-    console.log('dasdas')
-    if(hostName.includes('amazon.com') || hostName.includes('amazon.')){
-      return true;
-    }
-  }catch(error) {
-    console.log(error);
-    return false;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url; // Prepend 'https://' if scheme is missing
   }
+  console.log(url.toString())
+  const parsedUrl = new URL(url.toString());
+  console.log(parsedUrl)
 
   return false;
 }
