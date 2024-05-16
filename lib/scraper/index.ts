@@ -2,7 +2,8 @@
 
 import axios from "axios";
 import * as cheerio from 'cheerio';
-import { extractPrice } from "../utils";
+import { extractCurrency, extractPrice } from "../utils";
+import { json } from "stream/consumers";
 
 export async function scrapeAmazonProduct(url:string) {
   if(!url) return;
@@ -29,17 +30,45 @@ export async function scrapeAmazonProduct(url:string) {
 
     //Extract product info
     const title = $("#productTitle").text().trim();
-    const currentPrice = extractPrice(
-      $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen').first()
+    const currentPriceWhole = extractPrice(
+      $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen').first(),
+      $('span.a-price-whole'), 
+      $('span.a-price-fraction'), 
+      $('.priceToPay span.a-price-whole'),
+      $('.a.size.base.a-color-price'),
+      $('.a-button-selected .a-color-base'),
     );
+
+    const currentPriceFraction = extractPrice(
+      $('.a-price-fraction')
+    )
    
     const originalPrice = extractPrice(
       $('.a-span12.a-color-secondary.a-size-base')
       .find('span.a-price.a-text-price.a-size-base')
-      .find('span.a-offscreen').first()
-    )
+      .find ('span.a-offscreen').first()
+    );
 
-    console.log({title, currentPrice, originalPrice})
+    const wholePrice = currentPriceFraction ? currentPriceWhole + currentPriceFraction : currentPriceWhole
+
+    const outOfStuck = $('.a-size-medium.a-color-success').text().trim().toLowerCase().includes('out of stock');
+
+    const images = 
+      $('#landingImage').attr('data-a-dynamic-image') ||
+      $('#imgBlkFront').attr('data-a-dynamic-image') ||
+      '{}'
+
+    const imgUrls = Object.keys(JSON.parse(images))
+
+    const currency = extractCurrency($('.a-price-symbol'))
+
+    // const discountRate = $('td.a-span12.a-color-price.a-size-base > span:contains("%")').text()
+    const parentSpan = $('td.a-span12.a-color-price.a-size-base > span:contains("%")').first();
+    const discountRate = parentSpan.contents().filter(function() {
+        return this.nodeType === 3; // Filter for text nodes
+    }).text().trim().replace(/[()]/g, ''); // Remove parentheses
+
+    console.log({title, currentPriceWhole, currentPriceFraction, originalPrice, wholePrice, outOfStuck, imgUrls, currency, discountRate})
   } catch (error:any) {
     throw new Error(`Failed to scrape product: ${error.message}`)
   }

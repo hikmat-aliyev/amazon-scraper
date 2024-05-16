@@ -7,3 +7,8 @@ export function extractPrice(...elements: any) {
   }
   return '';
 }
+
+export function extractCurrency(element: any) {
+  const currency = element.text().trim().slice(0, 1)
+  return currency ? currency : '';
+}
