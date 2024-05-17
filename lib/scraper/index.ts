@@ -3,7 +3,6 @@
 import axios from "axios";
 import * as cheerio from 'cheerio';
 import { extractCurrency, extractPrice } from "../utils";
-import { json } from "stream/consumers";
 
 export async function scrapeAmazonProduct(url:string) {
   if(!url) return;
@@ -39,9 +38,8 @@ export async function scrapeAmazonProduct(url:string) {
       $('.a-button-selected .a-color-base'),
     );
 
-    const currentPriceFraction = extractPrice(
-      $('.a-price-fraction')
-    )
+    const currentPriceFraction = extractPrice($('.a-price-fraction'))
+    
    
     const originalPrice = extractPrice(
       $('.a-span12.a-color-secondary.a-size-base')
@@ -49,7 +47,7 @@ export async function scrapeAmazonProduct(url:string) {
       .find ('span.a-offscreen').first()
     );
 
-    const wholePrice = currentPriceFraction ? currentPriceWhole + currentPriceFraction : currentPriceWhole
+    const totalCurrentPrice = Number(currentPriceFraction ? currentPriceWhole + currentPriceFraction : currentPriceWhole)
 
     const outOfStuck = $('.a-size-medium.a-color-success').text().trim().toLowerCase().includes('out of stock');
 
@@ -69,7 +67,7 @@ export async function scrapeAmazonProduct(url:string) {
     }).text().trim().replace(/[()]/g, ''); // Remove parentheses
 
     const description = $('#feature-bullets span.a-list-item').text();
-    const star = $('span.a-size-base.a-color-base').first().text().trim();
+    const star = Number($('span.a-size-base.a-color-base').first().text().trim());
 
     //Construct data object with scraped info
     const data = {
@@ -77,19 +75,21 @@ export async function scrapeAmazonProduct(url:string) {
       currency: currency || '$',
       image: imgUrls[0],
       title,
-      currentPrice: wholePrice,
-      originalPrice: originalPrice,
+      currentPrice: totalCurrentPrice || originalPrice,
+      originalPrice: originalPrice || totalCurrentPrice,
       priceHistory: [],
       discountRate,
       category: 'category',
       reviewCount: 100,
-      stars: 4.3,
       isOutOfStuck: outOfStuck,
       description,
-      star
+      star,
+      lowestPrice: totalCurrentPrice || originalPrice,
+      highestPrice: originalPrice || totalCurrentPrice,
+      averagePrice: totalCurrentPrice || originalPrice,
     }
-
     console.log(data)
+    return data
   } catch (error:any) {
     throw new Error(`Failed to scrape product: ${error.message}`)
   }
