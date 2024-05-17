@@ -68,7 +68,28 @@ export async function scrapeAmazonProduct(url:string) {
         return this.nodeType === 3; // Filter for text nodes
     }).text().trim().replace(/[()]/g, ''); // Remove parentheses
 
-    console.log({title, currentPriceWhole, currentPriceFraction, originalPrice, wholePrice, outOfStuck, imgUrls, currency, discountRate})
+    const description = $('#feature-bullets span.a-list-item').text();
+    const star = $('span.a-size-base.a-color-base').first().text().trim();
+
+    //Construct data object with scraped info
+    const data = {
+      url,
+      currency: currency || '$',
+      image: imgUrls[0],
+      title,
+      currentPrice: wholePrice,
+      originalPrice: originalPrice,
+      priceHistory: [],
+      discountRate,
+      category: 'category',
+      reviewCount: 100,
+      stars: 4.3,
+      isOutOfStuck: outOfStuck,
+      description,
+      star
+    }
+
+    console.log(data)
   } catch (error:any) {
     throw new Error(`Failed to scrape product: ${error.message}`)
   }
