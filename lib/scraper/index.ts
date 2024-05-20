@@ -39,15 +39,22 @@ export async function scrapeAmazonProduct(url:string) {
     );
 
     const currentPriceFraction = extractPrice($('.a-price-fraction'))
-    
-   
+     
     const originalPrice = extractPrice(
       $('.a-span12.a-color-secondary.a-size-base')
       .find('span.a-price.a-text-price.a-size-base')
       .find ('span.a-offscreen').first()
     );
+     
+    let totalCurrentPrice;
+    //if the whole price also includes dot, it means it has the fraction part already
+    if(!currentPriceWhole.toString().includes('.')){
+      totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
+    }else {
+      totalCurrentPrice = currentPriceWhole
+    }
 
-    const totalCurrentPrice = Number(currentPriceFraction ? currentPriceWhole + currentPriceFraction : currentPriceWhole)
+    
 
     const outOfStuck = $('.a-size-medium.a-color-success').text().trim().toLowerCase().includes('out of stock');
 
@@ -82,11 +89,14 @@ export async function scrapeAmazonProduct(url:string) {
       category: 'category',
       reviewCount: 100,
       isOutOfStuck: outOfStuck,
-      description,
+      // description,
       star,
       lowestPrice: totalCurrentPrice || originalPrice,
       highestPrice: originalPrice || totalCurrentPrice,
       averagePrice: totalCurrentPrice || originalPrice,
+      currentPriceWhole,
+      currentPriceFraction, 
+      totalCurrentPrice
     }
     console.log(data)
     return data

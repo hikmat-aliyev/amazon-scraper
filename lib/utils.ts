@@ -1,9 +1,21 @@
+import { PriceHistoryItem, Product } from "@/types";
+
 export function extractPrice(...elements: any) {
-  for(const element of elements) {
+  for (const element of elements) {
     const priceText = element.first().text().trim();
-    if(priceText) return priceText.replace(/[^\d.,]/g, '');
+    if (priceText) {
+      // Remove any character that is not a digit or a comma or a dot
+      const cleanedText = priceText.replace(/[^\d.,]/g, '');
+      // Replace commas with nothing to handle thousand separators
+      const normalizedText = cleanedText.replace(/,/g, '');
+      // Convert the cleaned string to a number
+      const priceNumber = parseFloat(normalizedText);
+      if (!isNaN(priceNumber)) {
+        return priceNumber;
+      }
+    }
   }
-  return '';
+  return 0;
 }
 
 export function extractCurrency(element: any) {
@@ -19,7 +31,7 @@ export function extractDescription($: any) {
     ".a-unordered-list .a-list-item",
     ".a-expander-content p",
     // Add more selectors here if needed
-  ];
+  ];  
 
   for (const selector of selectors) {
     const elements = $(selector);
@@ -67,7 +79,16 @@ export function getAveragePrice(priceList: PriceHistoryItem[]) {
   return averagePrice;
 }
 
-export const getEmailNotifType = (
+const Notification = {
+  WELCOME: 'WELCOME',
+  CHANGE_OF_STOCK: 'CHANGE_OF_STOCK',
+  LOWEST_PRICE: 'LOWEST_PRICE',
+  THRESHOLD_MET: 'THRESHOLD_MET',
+}
+
+const THRESHOLD_PERCENTAGE = 40;
+
+export const getEmailNotifyType = (
   scrapedProduct: Product,
   currentProduct: Product
 ) => {

@@ -6,10 +6,10 @@ const productSchema = new mongoose.Schema({
   image: { type: String, required: true},
   currentPrice: { type: Number, required: true },
   originalPrice: { type: Number, required: true },
-  currency: { type: Number, required: true },
+  currency: { type: String, required: true },
   priceHistory: [
     { 
-      prices: { type: Number, required: true },
+      price: { type: Number, required: true },
       date: { type: Date, default: Date.now}
     },
   ],
@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
   reviewsCount: { type: Number },
   isOutOfStock: { type: Boolean },
   users: [
-    {email: String, required: true}
+    {email: { type: String, required: true }}
   ], 
   default: [],
 
