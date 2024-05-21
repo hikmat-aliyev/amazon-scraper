@@ -13,7 +13,7 @@ const Trending = async () => {
       <div>
       {allProducts?.map((product) => (
         <div className="flex flex-wrap gap-x-8 gap-y-16">
-          <ProductCard />
+          <ProductCard key={product._id} product={product}/>
         </div>
       ))}
       </div>
