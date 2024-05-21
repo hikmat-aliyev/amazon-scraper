@@ -23,6 +23,14 @@ export function extractCurrency(element: any) {
   return currency ? currency : '';
 }
 
+export function extractStar(element: any) {
+    const match = element.match(/[\d.]+/);
+    if (match) {
+      return parseFloat(match[0]);
+    }
+    return null;
+}
+
 
 // Extracts description from two possible elements from amazon
 export function extractDescription($: any) {

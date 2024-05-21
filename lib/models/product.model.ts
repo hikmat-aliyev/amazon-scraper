@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   currentPrice: { type: Number, required: true },
   originalPrice: { type: Number, required: true },
   currency: { type: String, required: true },
+  star: { type: Number, required: true },
   priceHistory: [
     { 
       price: { type: Number, required: true },
@@ -25,7 +26,6 @@ const productSchema = new mongoose.Schema({
     {email: { type: String, required: true }}
   ], 
   default: [],
-
 }, { timestamps: true });
 
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
