@@ -1,4 +1,6 @@
-import { getProductById } from "@/lib/actions"
+import PriceInfoCard from "@/components/PriceInfoCard";
+import ProductCard from "@/components/ProductCard";
+import { getOtherProducts, getProductById } from "@/lib/actions"
 import { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,8 +12,9 @@ type Props = {
 
 const ProductDetails =  async ( { params : { id } } : Props ) => {
   const product: Product = await getProductById(id);
-
   if(!product) redirect('/');
+
+  const otherProducts = await getOtherProducts(id);
 
   return (
     <div className="product-container">
@@ -50,12 +53,135 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
                   width={20}
                   height={20}
                 />
-                <p className="text-base font-semibold text-[#D46F77]">{product.reviewsCount}</p>
+                <p className="text-base font-semibold text-[#D46F77]">
+                  {product.reviewsCount}
+                </p>
+              </div>
+
+              <div className="p-2 bg-white-200 rounded-10">
+                <Image 
+                  src='/assets/icons/bookmark.svg'
+                  alt= 'bookmark'
+                  width={20}
+                  height={20}
+                />
+              </div>
+
+              <div className="p-2 bg-white-200 rounded-10">
+                <Image 
+                  src='/assets/icons/share.svg'
+                  alt= 'share'
+                  width={20}
+                  height={20}
+                />
               </div>
             </div>
           </div>
+
+          <div className="product-info">
+            <div className="flex flex-col gap-2">
+              <p className="text-[34px] text-secondary font-bold">
+                {product.currency} {product.currentPrice}
+              </p>
+              {/* show the original price if it is not same with current price */}
+              {product.currentPrice !== product.originalPrice &&
+                <p className="text-[21px] text-black opacity-50 line-through">
+                {product.currency} {product.originalPrice}
+              </p>}
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-3">
+                <div className="product-stars">
+                  <Image 
+                    src="/assets/icons/star.svg"
+                    alt="star"
+                    width={16}
+                    height={16}
+                  />
+                  <p className="text-sm text-primary-orange font-semibold">{product.star}</p>
+                </div>
+
+                <div className="product-reviews">
+                  <Image
+                    src='/assets/icons/comment.svg'
+                    alt="comment"
+                    width={16}
+                    height={16}
+                   />
+                   <p className="text-sm text-secondary font-semibold">{product.reviewsCount} Reviews</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="my-7 flex flex-col gap-5">
+            <div className="flex gap-5 flex-wrap">
+              <PriceInfoCard 
+                title="Current Price"
+                iconSrc="/assets/icons/price-tag.svg"
+                value={`${product.currency} ${product.currentPrice}`}
+              />
+              <PriceInfoCard 
+                title="Average Price"
+                iconSrc="/assets/icons/chart.svg"
+                value={`${product.currency} ${product.averagePrice}`}
+              />
+              <PriceInfoCard 
+                title="Highest Price"
+                iconSrc="/assets/icons/arrow-up.svg"
+                value={`${product.currency} ${product.highestPrice}`}
+              />
+              <PriceInfoCard 
+                title="Lowest Price"
+                iconSrc="/assets/icons/arrow-down.svg"
+                value={`${product.currency} ${product.lowestPrice}`}
+              />
+            </div>
+          </div>
+          Modal
         </div>
       </div>
+
+      <div className="flex flex-col gap-16 items-center justify-center">
+        <div className="flex flex-col gap-5">
+          <h3 className="text-xl text-secondary font-semibold">
+            Product Description
+          </h3>
+
+          <p className="flex flex-col gap-4 text-[0.9rem] opacity-90">
+            {product.description}
+          </p>
+        </div>
+        <button 
+          className="bg-black hover:opacity-80 w-fit p-4 rounded-2xl
+                      flex justify-between items-center gap-2"
+        >
+          <Image
+            src='/assets/icons/bag.svg'
+            alt='check' 
+            width={22}
+            height={22}
+          />
+          <Link href={product.url} className="text-base text-white font-semibold">
+            Buy now
+          </Link>
+        </button>
+      </div>
+      
+      {otherProducts && otherProducts?.length > 0 && 
+      <div className="flex flex-col">
+         <h1 className=" font-semibold text-xl text-secondary">Other Products</h1>
+         <div className="flex flex-wrap gap-28">
+          {otherProducts.map((item: Product) => (
+            <div key={item._id}>
+              <ProductCard product={item} />
+            </div>
+          ))}
+         </div>      
+      </div>}
+
     </div>
   )
 }

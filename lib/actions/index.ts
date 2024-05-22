@@ -73,3 +73,19 @@ export async function getAllProducts() {
     console.log(error);
   }
 }
+
+export async function getOtherProducts(productId: string) {
+  try {
+    const product = await Product.findById(productId);
+    
+    if(!product) return null;
+
+    const otherProducts = await Product.find({
+      _id: { $ne: productId}
+    }).limit(5)
+
+    return otherProducts;
+  } catch (error) {
+    console.log(error);
+  }
+}
