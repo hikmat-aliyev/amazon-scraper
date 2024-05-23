@@ -30,8 +30,8 @@ const Navbar = () => {
             key={icon.alt} 
             src={icon.src} 
             alt={icon.src}
-            width={28}
-            height={28} />
+            width={31}
+            height={31} />
           ))}
         </div>
       </nav>

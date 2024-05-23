@@ -1,3 +1,4 @@
+import Modal from "@/components/Modal";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
 import { getOtherProducts, getProductById } from "@/lib/actions"
@@ -18,7 +19,7 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
 
   return (
     <div className="product-container">
-      <div className="flex gap-28 xl:flex-grow flex-col">
+      <div className="flex gap-28 xl:flex-grow" >
         <div className="product-image">
           <Image 
             src={product.image}
@@ -117,7 +118,7 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
           </div>
 
           <div className="my-7 flex flex-col gap-5">
-            <div className="flex gap-5 flex-wrap">
+            <div className="flex gap-3 flex-wrap">
               <PriceInfoCard 
                 title="Current Price"
                 iconSrc="/assets/icons/price-tag.svg"
@@ -140,7 +141,8 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
               />
             </div>
           </div>
-          Modal
+
+          <Modal/>
         </div>
       </div>
 

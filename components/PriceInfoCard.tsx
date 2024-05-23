@@ -13,14 +13,14 @@ const PriceInfoCard = ({ title, iconSrc, value}: Props) => {
         {title}
       </p>
 
-      <div className="flex gap-1">
+      <div className="flex items-center justify-center w-fit gap-1">
         <Image 
           src={iconSrc}
           alt={title}
           width={24}
           height={24}
         />
-        <p className="text-2xl font-bold text-secondary">{value}</p>
+        <p className="flex text-xl font-bold text-secondary" style={{ whiteSpace: 'nowrap' }}>{value}</p>
       </div>
     </div>
   )
