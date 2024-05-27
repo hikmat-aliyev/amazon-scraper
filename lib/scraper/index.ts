@@ -56,7 +56,7 @@ export async function scrapeAmazonProduct(url:string) {
 
     
 
-    const outOfStuck = $('.a-size-medium.a-color-success').text().trim().toLowerCase().includes('out of stock');
+    const outOfStock = $('.a-size-medium.a-color-success').text().trim().toLowerCase().includes('out of stock');
 
     const images = 
       $('#landingImage').attr('data-a-dynamic-image') ||
@@ -67,11 +67,13 @@ export async function scrapeAmazonProduct(url:string) {
 
     const currency = extractCurrency($('.a-price-symbol'))
 
-    // const discountRate = $('td.a-span12.a-color-price.a-size-base > span:contains("%")').text()
     const parentSpan = $('td.a-span12.a-color-price.a-size-base > span:contains("%")').first();
+
     const discountRate = parentSpan.contents().filter(function() {
         return this.nodeType === 3; // Filter for text nodes
     }).text().trim().replace(/[()]/g, ''); // Remove parentheses
+
+    const discountRateNumber = parseInt((discountRate.replace('%', '')), 10);
 
     const description = $('#feature-bullets span.a-list-item').text();
     const star = extractStar($('span.a-size-base.a-color-base').text().trim());
@@ -85,18 +87,15 @@ export async function scrapeAmazonProduct(url:string) {
       currentPrice: totalCurrentPrice || originalPrice,
       originalPrice: originalPrice || totalCurrentPrice,
       priceHistory: [],
-      discountRate,
+      discountRate: discountRateNumber,
       category: 'category',
       reviewsCount: reviewsCount || 100,
-      isOutOfStuck: outOfStuck,
+      isOutOfStock: outOfStock,
       description,
       star,
       lowestPrice: totalCurrentPrice || originalPrice,
       highestPrice: originalPrice || totalCurrentPrice,
       averagePrice: totalCurrentPrice || originalPrice,
-      currentPriceWhole,
-      currentPriceFraction, 
-      totalCurrentPrice
     }
     console.log(data)
     return data

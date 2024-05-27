@@ -1,10 +1,15 @@
 'use client'
 
+import { addUserEmailToProduct } from '@/lib/actions'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import Image from 'next/image'
-import { Fragment, useState } from 'react'
+import { FormEvent, Fragment, useState } from 'react'
 
-const Modal = () => {
+interface Props {
+  productId: string
+}
+
+const Modal = ({ productId }: Props) => {
   let [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,7 +61,7 @@ const Modal = () => {
             </div>
             <DialogTitle className="text-gray-800 font-semibold text-[1.1rem]">Stay updated with product pricing alerts right in your inbox!</DialogTitle>
             <p className="text-gray-600 text-[0.9rem]">Never miss a bargain again with our timely alerts!</p>
-            <form action="" className='flex flex-col'>
+            <form action="" className='flex flex-col' onSubmit={handleSubmit}>
               <label htmlFor='email' className='text-gray-700 text-[0.9rem] font-semibold'>Email address</label>
               <div className="dialog-input_container">
                 <Image 
@@ -76,7 +81,7 @@ const Modal = () => {
                   className='dialog-input'
                 />
               </div>
-              <button className='dialog-btn'>
+              <button type='submit' className='dialog-btn'>
                 {isSubmitting ? 'Submitting...' : 'Track'}
               </button>
             </form>
