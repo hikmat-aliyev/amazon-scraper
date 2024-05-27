@@ -77,17 +77,26 @@ export async function generateEmailBody( product: EmailProductInfo, type: Notifi
   return { subject, body };
 }
 
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp-mail.outlook.com',
+//   service: 'hotmail',
+//   port: 2525,
+//   secure: false,
+//   auth: {
+//     user: 'priceeye@outlook.com',
+//     pass: process.env.EMAIL_PASSWORD,
+//   },
+//   maxConnection: 1
+// })
 const transporter = nodemailer.createTransport({
-  pool: true,
-  service: 'hotmail',
-  port: 2525,
-  secure: false,
+  host: "smtp-mail.outlook.com",
+  port: 587,
+  secure: false, // Use `true` for port 465, `false` for all other ports
   auth: {
-    user: 'priceeye@outlook.com',
+    user: "priceeye@outlook.com",
     pass: process.env.EMAIL_PASSWORD,
   },
-  maxConnection: 1
-})
+});
 
 export async function sendEmail(emailContent: EmailContent, sendTo: string[]) {
   const mailOptions = {
