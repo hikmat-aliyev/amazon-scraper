@@ -26,7 +26,7 @@ export async function scrapeAmazonProduct(url:string) {
     const response = await axios.get(url, options);
     const $ = cheerio.load(response.data)
     
-
+    console.log(response.data);
     //Extract product info
     const title = $("#productTitle").text().trim();
     const currentPriceWhole = extractPrice(
@@ -46,13 +46,13 @@ export async function scrapeAmazonProduct(url:string) {
       .find ('span.a-offscreen').first()
     );
      
-    let totalCurrentPrice;
-    //if the whole price also includes dot, it means it has the fraction part already
-    if(!currentPriceWhole.toString().includes('.')){
-      totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
-    }else {
-      totalCurrentPrice = currentPriceWhole
-    }
+    let totalCurrentPrice = currentPriceWhole;
+    // //if the whole price also includes dot, it means it has the fraction part already
+    // if(!currentPriceWhole.toString().includes('.')){
+    //   totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
+    // }else {
+    //   totalCurrentPrice = currentPriceWhole
+    // }
 
     
 
@@ -89,7 +89,7 @@ export async function scrapeAmazonProduct(url:string) {
       priceHistory: [],
       discountRate: discountRateNumber || 0,
       category: 'category',
-      reviewsCount: reviewsCount || 100,
+      reviewsCount: reviewsCount || 100,  
       isOutOfStock: outOfStock,
       description,
       star: star || 4,
