@@ -23,26 +23,15 @@ export async function scrapeAmazonProduct(url:string) {
   }
 
   try {
-    const response = await axios.get(url, {
-      ...options,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br'
-      }
-    });
-    
+    const response = await axios.get(url, options);
     const $ = cheerio.load(response.data)
+
     //Extract product info
     const title = $("#productTitle").text().trim();
     const currentPriceWhole = extractPrice(
-      $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen').first(),
+      $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen'),
       $('span.a-price-whole'), 
-      $('span.a-price-fraction'), 
       $('.priceToPay span.a-price-whole'),
-      $('.a.size.base.a-color-price'),
-      $('.a-button-selected .a-color-base'),
     );
 
     const currentPriceFraction = extractPrice($('.a-price-fraction'))
@@ -51,15 +40,15 @@ export async function scrapeAmazonProduct(url:string) {
       $('.a-span12.a-color-secondary.a-size-base')
       .find('span.a-price.a-text-price.a-size-base')
       .find ('span.a-offscreen').first()
-    );
+    ); 
      
     let totalCurrentPrice = currentPriceWhole;
-    // //if the whole price also includes dot, it means it has the fraction part already
-    // if(!currentPriceWhole.toString().includes('.')){
-    //   totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
-    // }else {
-    //   totalCurrentPrice = currentPriceWhole
-    // }
+    //if the whole price also includes dot, it means it has the fraction part already
+    if(!currentPriceWhole.toString().includes('.')){
+      totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
+    }else {
+      totalCurrentPrice = currentPriceWhole
+    }
 
     
 
@@ -85,6 +74,7 @@ export async function scrapeAmazonProduct(url:string) {
     const description = $('#feature-bullets span.a-list-item').text();
     const star = extractStar($('span.a-size-base.a-color-base').text().trim());
     const reviewsCount = extractReviewCount( $('span[data-hook="total-review-count"]').text());
+
     //Construct data object with scraped info
     const data = {
       url,
@@ -104,7 +94,7 @@ export async function scrapeAmazonProduct(url:string) {
       highestPrice: originalPrice || totalCurrentPrice,
       averagePrice: totalCurrentPrice || originalPrice,
     }
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error:any) {
     throw new Error(`Failed to scrape product: ${error.message}`)

@@ -2,7 +2,9 @@ import { PriceHistoryItem, Product } from "@/types";
 
 export function extractPrice(...elements: any) {
   for (const element of elements) {
+    console.log(element.text())
     const priceText = element.first().text().trim();
+    // console.log(priceText)
     if (priceText) {
       // Remove any character that is not a digit or a comma or a dot
       const cleanedText = priceText.replace(/[^\d.,]/g, '');
