@@ -6,9 +6,8 @@ import { connectToDB } from "../mongoose";
 import { scrapeAmazonProduct } from "../scraper"
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { generateEmailBody, sendEmail } from "../nodemailer";
-import { EmailContent, User } from "@/types";
-import nodemailer from 'nodemailer';
-
+import { User } from "@/types";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function scrapeAndStoreProduct(productUrl:string) {
   if(!productUrl) return
@@ -69,7 +68,7 @@ export async function getProductById(productId: string) {
 export async function getAllProducts() {
   try {
     connectToDB();
-    
+    noStore();
     const products = await Product.find();
     if(!products) {
       return [];
