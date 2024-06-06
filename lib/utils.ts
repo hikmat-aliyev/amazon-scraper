@@ -2,7 +2,7 @@ import { PriceHistoryItem, Product } from "@/types";
 
 export function extractPrice(...elements: any) {
   for (const element of elements) {
-    console.log(element.text())
+    const text = element.text()
     const priceText = element.first().text().trim();
     // console.log(priceText)
     if (priceText) {
@@ -33,12 +33,15 @@ export function extractStar(element: any) {
     return null;
 }
 
-export function extractReviewCount(element: any) {
-  // Use a regular expression to match and remove non-numeric characters except commas
-  const numberString = element.match(/\d{1,3}(,\d{3})*/g)[0];
-  // Remove commas to get the final number
-  const number = parseInt(numberString.replace(/,/g, ''), 10);
-  return number;
+export function extractReviewCount(...elements: any) {
+  for(const element of elements) {
+    // Use a regular expression to match and remove non-numeric characters except commas
+    const numberString = element.match(/\d{1,3}(,\d{3})*/g)[0];
+    // Remove commas to get the final number
+    const number = parseInt(numberString.replace(/,/g, ''), 10);
+    return number;
+    }
+  return 0;
 }
 
 // Extracts description from two possible elements from amazon

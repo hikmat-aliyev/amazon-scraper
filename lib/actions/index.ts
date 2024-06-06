@@ -8,6 +8,7 @@ import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { generateEmailBody, sendEmail } from "../nodemailer";
 import { User } from "@/types";
 import { unstable_noStore as noStore } from 'next/cache';
+import { redirect } from 'next/navigation'
 
 export async function scrapeAndStoreProduct(productUrl:string) {
   if(!productUrl) return
@@ -46,6 +47,7 @@ export async function scrapeAndStoreProduct(productUrl:string) {
     )
 
     revalidatePath(`product/${newProduct._id}`);
+    // redirect('/')
   } catch (error:any) {
     throw new Error(`Failed to create/update product: ${error.message}`)
   }
