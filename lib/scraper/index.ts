@@ -25,9 +25,10 @@ export async function scrapeAmazonProduct(url:string) {
   try {
     const response = await axios.get(url, options);
     const $ = cheerio.load(response.data)
-
+   
     //Extract product info
     const title = $("#productTitle").text().trim();
+    
     const currentPriceWhole = extractPrice(
       $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen'),
       $('span.a-price-whole'), 
@@ -73,7 +74,10 @@ export async function scrapeAmazonProduct(url:string) {
 
     const description = $('#feature-bullets span.a-list-item').text();
     const star = extractStar($('span.a-size-base.a-color-base').text().trim());
-    const reviewsCount = extractReviewCount( $('span[data-hook="total-review-count"]').text());
+    const reviewsCount = extractReviewCount( 
+      $('span[data-hook="total-review-count"]'),
+      $('#acrCustomerReviewText')
+    );
 
     //Construct data object with scraped info
     const data = {
@@ -94,7 +98,7 @@ export async function scrapeAmazonProduct(url:string) {
       highestPrice: originalPrice || totalCurrentPrice,
       averagePrice: totalCurrentPrice || originalPrice,
     }
-    // console.log(data)
+
     return data
   } catch (error:any) {
     throw new Error(`Failed to scrape product: ${error.message}`)

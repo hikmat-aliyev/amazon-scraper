@@ -26,21 +26,25 @@ export function extractCurrency(element: any) {
 }
 
 export function extractStar(element: any) {
-    const match = element.match(/[\d.]+/);
-    if (match) {
-      return parseFloat(match[0]);
-    }
-    return null;
+  const text = typeof element === 'string' ? element : element.text().trim();
+  const match = text.match(/[\d.]+/);
+  if (match) {
+    return parseFloat(match[0]);
+  }
+  return null;
 }
 
 export function extractReviewCount(...elements: any) {
-  for(const element of elements) {
-    // Use a regular expression to match and remove non-numeric characters except commas
-    const numberString = element.match(/\d{1,3}(,\d{3})*/g)[0];
-    // Remove commas to get the final number
-    const number = parseInt(numberString.replace(/,/g, ''), 10);
-    return number;
+  for (const element of elements) {
+    const text = typeof element === 'string' ? element : element.text().trim();
+    const match = text.match(/\d{1,3}(,\d{3})*/g);
+    
+    if (match) {
+      // Remove commas to get the final number
+      const number = parseInt(match[0].replace(/,/g, ''), 10);
+      return number;
     }
+  }
   return 0;
 }
 
