@@ -1,17 +1,15 @@
-"use server"
+'use server';
 
-import { revalidatePath } from "next/cache";
-import Product from "../models/product.model";
-import { connectToDB } from "../mongoose";
-import { scrapeAmazonProduct } from "../scraper"
-import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
-import { generateEmailBody, sendEmail } from "../nodemailer";
-import { User } from "@/types";
+import Product from '../models/product.model';
+import { connectToDB } from '../mongoose';
+import { scrapeAmazonProduct } from '../scraper';
+import { getAveragePrice, getHighestPrice, getLowestPrice } from '../utils';
+import { generateEmailBody, sendEmail } from '../nodemailer';
+import { User } from '@/types';
 import { unstable_noStore as noStore } from 'next/cache';
-import { redirect } from 'next/navigation'
 
 export async function scrapeAndStoreProduct(productUrl:string) {
-  if(!productUrl) return
+  if(!productUrl) return;
 
   try {
     connectToDB();
@@ -22,13 +20,13 @@ export async function scrapeAndStoreProduct(productUrl:string) {
     
     let product = scrapedProduct;
 
-    const existingProduct = await Product.findOne({ url: scrapedProduct.url })
+    const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
     if(existingProduct) {
       const updatedPriceHistory:any = [
         ...existingProduct.priceHistory,
         { price: scrapedProduct.currentPrice }
-      ]
+      ];
 
       product = {
         ...scrapedProduct,
@@ -36,7 +34,7 @@ export async function scrapeAndStoreProduct(productUrl:string) {
         lowestPrice: getLowestPrice(updatedPriceHistory),
         highestPrice: getHighestPrice(updatedPriceHistory),
         averagePrice: getAveragePrice(updatedPriceHistory)
-      }
+      };
     }
 
     //update product if it exists, otherwise, create new one
@@ -44,11 +42,11 @@ export async function scrapeAndStoreProduct(productUrl:string) {
       { url: scrapedProduct.url }, 
       product,
       { upsert: true, new: true } 
-    )
+    );
     return `/products/${newProduct._id}`;
     
   } catch (error:any) {
-    throw new Error(`Failed to create/update product: ${error.message}`)
+    throw new Error(`Failed to create/update product: ${error.message}`);
   }
 }
 
@@ -56,7 +54,7 @@ export async function getProductById(productId: string) {
   try {
     connectToDB();
 
-    const product = await Product.findOne({ _id: productId })
+    const product = await Product.findOne({ _id: productId });
 
     if(!product) return null;
 
@@ -88,7 +86,7 @@ export async function getOtherProducts(productId: string) {
 
     const otherProducts = await Product.find({
       _id: { $ne: productId}
-    }).limit(5)
+    }).limit(5);
 
     return otherProducts;
   } catch (error) {
@@ -110,11 +108,11 @@ export async function addUserEmailToProduct(productId: string, userEmail: string
 
       await product.save();
 
-      const emailContent = await generateEmailBody(product, "WELCOME");
+      const emailContent = await generateEmailBody(product, 'WELCOME');
 
       await sendEmail(emailContent, [userEmail]);
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }

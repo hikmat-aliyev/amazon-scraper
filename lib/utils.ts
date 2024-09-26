@@ -1,8 +1,8 @@
-import { PriceHistoryItem, Product } from "@/types";
+import { PriceHistoryItem, Product } from '@/types';
 
 export function extractPrice(...elements: any) {
   for (const element of elements) {
-    const text = element.text()
+    const text = element.text();
     const priceText = element.first().text().trim();
     // console.log(priceText)
     if (priceText) {
@@ -21,7 +21,7 @@ export function extractPrice(...elements: any) {
 }
 
 export function extractCurrency(element: any) {
-  const currency = element.text().trim().slice(0, 1)
+  const currency = element.text().trim().slice(0, 1);
   return currency ? currency : '';
 }
 
@@ -52,8 +52,8 @@ export function extractReviewCount(...elements: any) {
 export function extractDescription($: any) {
   // these are possible elements holding description of the product
   const selectors = [
-    ".a-unordered-list .a-list-item",
-    ".a-expander-content p",
+    '.a-unordered-list .a-list-item',
+    '.a-expander-content p',
     // Add more selectors here if needed
   ];  
 
@@ -63,13 +63,13 @@ export function extractDescription($: any) {
       const textContent = elements
         .map((_: any, element: any) => $(element).text().trim())
         .get()
-        .join("\n");
+        .join('\n');
       return textContent;
     }
   }
 
   // If no matching elements were found, return an empty string
-  return "";
+  return '';
 }
 
 export function getHighestPrice(priceList: PriceHistoryItem[]) {
@@ -108,7 +108,7 @@ const Notification = {
   CHANGE_OF_STOCK: 'CHANGE_OF_STOCK',
   LOWEST_PRICE: 'LOWEST_PRICE',
   THRESHOLD_MET: 'THRESHOLD_MET',
-}
+};
 
 const THRESHOLD_PERCENTAGE = 40;
 

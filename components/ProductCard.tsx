@@ -1,6 +1,6 @@
-import { Product } from "@/types";
-import Image from "next/image";
-import Link from "next/link"; 
+import { Product } from '@/types';
+import Image from 'next/image';
+import Link from 'next/link'; 
 
 interface Props {
   product: Product
@@ -36,7 +36,7 @@ const ProductCard = ({ product }: Props) => {
         </div>
       </div>
     </Link>
-  )
-}
+  );
+};
 
 export default ProductCard;

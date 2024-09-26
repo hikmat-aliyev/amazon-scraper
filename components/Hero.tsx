@@ -1,6 +1,6 @@
-import Image from "next/image"
-import SearchBar from "./SearchBar"
-import HeroCarousel from "./HeroCarousel"
+import Image from 'next/image';
+import SearchBar from './SearchBar';
+import HeroCarousel from './HeroCarousel';
 
 const Hero = () => {
   return (
@@ -33,7 +33,7 @@ const Hero = () => {
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

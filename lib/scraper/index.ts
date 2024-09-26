@@ -1,8 +1,8 @@
-"use server"
+'use server';
 
-import axios from "axios";
+import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { extractCurrency, extractPrice, extractReviewCount, extractStar } from "../utils";
+import { extractCurrency, extractPrice, extractReviewCount, extractStar } from '../utils';
 
 export async function scrapeAmazonProduct(url:string) {
   if(!url) return;
@@ -17,17 +17,17 @@ export async function scrapeAmazonProduct(url:string) {
       username: `${username}-session-${session_id}`,
       password,
     },
-    host: "brd.superproxy.op",
+    host: 'brd.superproxy.op',
     port,
     rejectUnauthorized: false,
-  }
+  };
 
   try {
     const response = await axios.get(url, options);
-    const $ = cheerio.load(response.data)
+    const $ = cheerio.load(response.data);
    
     //Extract product info
-    const title = $("#productTitle").text().trim();
+    const title = $('#productTitle').text().trim();
     
     const currentPriceWhole = extractPrice(
       $('span.a-price.a-text-price.a-size-medium.apexPriceToPay').find('span.a-offscreen'),
@@ -35,20 +35,20 @@ export async function scrapeAmazonProduct(url:string) {
       $('.priceToPay span.a-price-whole'),
     );
 
-    const currentPriceFraction = extractPrice($('.a-price-fraction'))
+    const currentPriceFraction = extractPrice($('.a-price-fraction'));
      
     const originalPrice = extractPrice(
       $('.a-span12.a-color-secondary.a-size-base')
-      .find('span.a-price.a-text-price.a-size-base')
-      .find ('span.a-offscreen').first()
+        .find('span.a-price.a-text-price.a-size-base')
+        .find ('span.a-offscreen').first()
     ); 
      
     let totalCurrentPrice = currentPriceWhole;
     //if the whole price also includes dot, it means it has the fraction part already
     if(!currentPriceWhole.toString().includes('.')){
-      totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction)
+      totalCurrentPrice = Number(currentPriceWhole + '.' + currentPriceFraction);
     }else {
-      totalCurrentPrice = currentPriceWhole
+      totalCurrentPrice = currentPriceWhole;
     }
 
     
@@ -58,16 +58,16 @@ export async function scrapeAmazonProduct(url:string) {
     const images = 
       $('#landingImage').attr('data-a-dynamic-image') ||
       $('#imgBlkFront').attr('data-a-dynamic-image') ||
-      '{}'
+      '{}';
 
-    const imgUrls = Object.keys(JSON.parse(images))
+    const imgUrls = Object.keys(JSON.parse(images));
 
-    const currency = extractCurrency($('.a-price-symbol'))
+    const currency = extractCurrency($('.a-price-symbol'));
 
     const parentSpan = $('td.a-span12.a-color-price.a-size-base > span:contains("%")').first();
 
     const discountRate = parentSpan.contents().filter(function() {
-        return this.nodeType === 3; // Filter for text nodes
+      return this.nodeType === 3; // Filter for text nodes
     }).text().trim().replace(/[()]/g, ''); // Remove parentheses
 
     const discountRateNumber = parseInt((discountRate.replace('%', '')), 10);
@@ -97,10 +97,10 @@ export async function scrapeAmazonProduct(url:string) {
       lowestPrice: totalCurrentPrice || originalPrice,
       highestPrice: originalPrice || totalCurrentPrice,
       averagePrice: totalCurrentPrice || originalPrice,
-    }
+    };
 
-    return data
+    return data;
   } catch (error:any) {
-    throw new Error(`Failed to scrape product: ${error.message}`)
+    throw new Error(`Failed to scrape product: ${error.message}`);
   }
 }

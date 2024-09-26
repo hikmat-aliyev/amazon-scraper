@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifyType } from "@/lib/utils";
-import { connectToDB } from "@/lib/mongoose";
-import Product from "@/lib/models/product.model";
-import { scrapeAmazonProduct } from "@/lib/scraper";
-import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
+import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifyType } from '@/lib/utils';
+import { connectToDB } from '@/lib/mongoose';
+import Product from '@/lib/models/product.model';
+import { scrapeAmazonProduct } from '@/lib/scraper';
+import { generateEmailBody, sendEmail } from '@/lib/nodemailer';
 
 export const maxDuration = 60; // This function can run for a maximum of 300 seconds
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(request: Request) {
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     const products = await Product.find({});
 
-    if (!products) throw new Error("No product fetched");
+    if (!products) throw new Error('No product fetched');
 
     // ======================== 1 SCRAPE LATEST PRODUCT DETAILS & UPDATE DB
     const updatedProducts = await Promise.all(
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
     );
 
     return NextResponse.json({
-      message: "Ok",
+      message: 'Ok',
       data: updatedProducts,
     });
   } catch (error: any) {

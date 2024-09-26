@@ -1,4 +1,4 @@
-"use server"
+'use server';
 import mongoose from 'mongoose';
 
 let isConnected = false;
@@ -15,8 +15,8 @@ export const connectToDB = async () => {
 
     isConnected = true;
 
-    console.log('MongoDB is connected')
+    console.log('MongoDB is connected');
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};

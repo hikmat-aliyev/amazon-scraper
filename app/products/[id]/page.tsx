@@ -1,11 +1,11 @@
-import Modal from "@/components/Modal";
-import PriceInfoCard from "@/components/PriceInfoCard";
-import ProductCard from "@/components/ProductCard";
-import { getOtherProducts, getProductById } from "@/lib/actions"
-import { Product } from "@/types";
-import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import Modal from '@/components/Modal';
+import PriceInfoCard from '@/components/PriceInfoCard';
+import ProductCard from '@/components/ProductCard';
+import { getOtherProducts, getProductById } from '@/lib/actions';
+import { Product } from '@/types';
+import Image from 'next/image';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 type Props = {
   params: { id: string }
@@ -87,8 +87,8 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
               {/* show the original price if it is not same with current price */}
               {product.currentPrice !== product.originalPrice &&
                 <p className="text-[21px] text-black opacity-50 line-through">
-                {product.currency} {product.originalPrice}
-              </p>}
+                  {product.currency} {product.originalPrice}
+                </p>}
             </div>
 
             <div className="flex flex-col gap-4">
@@ -109,8 +109,8 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
                     alt="comment"
                     width={16}
                     height={16}
-                   />
-                   <p className="text-sm text-secondary font-semibold">{product.reviewsCount} Reviews</p>
+                  />
+                  <p className="text-sm text-secondary font-semibold">{product.reviewsCount} Reviews</p>
                 </div>
               </div>
 
@@ -174,18 +174,18 @@ const ProductDetails =  async ( { params : { id } } : Props ) => {
       
       {otherProducts && otherProducts?.length > 0 && 
       <div className="flex flex-col">
-         <h1 className=" font-semibold text-xl text-secondary">Other Products</h1>
-         <div className="flex flex-wrap gap-28">
+        <h1 className=" font-semibold text-xl text-secondary">Other Products</h1>
+        <div className="flex flex-wrap gap-28">
           {otherProducts.map((item: Product) => (
             <div key={item._id}>
               <ProductCard product={item} />
             </div>
           ))}
-         </div>      
+        </div>      
       </div>}
 
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetails
+export default ProductDetails;

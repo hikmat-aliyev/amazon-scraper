@@ -1,11 +1,11 @@
-import Link from "next/link"
-import Image from "next/image"
+import Link from 'next/link';
+import Image from 'next/image';
 
 const navIcons = [
-  { src: "/assets/icons/search.svg", alt: "search" },
-  { src: "/assets/icons/black-heart.svg", alt: "heart" },
-  { src: "/assets/icons/user.svg", alt: "user" },
-]
+  { src: '/assets/icons/search.svg', alt: 'search' },
+  { src: '/assets/icons/black-heart.svg', alt: 'heart' },
+  { src: '/assets/icons/user.svg', alt: 'user' },
+];
 
 const Navbar = () => {
   return (
@@ -15,28 +15,28 @@ const Navbar = () => {
           <Image
             src="/assets/icons/logo.svg"
             alt="logo"
-            width={28}
+            width={28}  
             height={28}
           />
 
           <p className="nav-logo">
             Price<span className="text-primary">Eye</span>
-         </p>
+          </p>
         </Link>
 
         <div className="flex items-center gap-5">
           {navIcons.map(icon => (
             <img 
-            key={icon.alt} 
-            src={icon.src} 
-            alt={icon.src}
-            width={31}
-            height={31} />
+              key={icon.alt} 
+              src={icon.src} 
+              alt={icon.src}
+              width={31}
+              height={31} />
           ))}
         </div>
       </nav>
     </header>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

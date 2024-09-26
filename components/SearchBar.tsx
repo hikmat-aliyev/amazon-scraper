@@ -1,6 +1,6 @@
-"use client";
-import { scrapeAndStoreProduct } from "@/lib/actions";
-import { FormEvent, useState } from "react";
+'use client';
+import { scrapeAndStoreProduct } from '@/lib/actions';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const isValidProductUrl = (url: string) => {
@@ -21,7 +21,7 @@ const isValidProductUrl = (url: string) => {
   }
 
   return false;
-}
+};
 
 const SearchBar = () => {
   const [searchPrompt, setSearchPrompt] = useState('');
@@ -32,7 +32,7 @@ const SearchBar = () => {
     event.preventDefault();
 
     const isValidLink = isValidProductUrl(searchPrompt);
-    if(!isValidLink) return alert("Please provide a valid Amazon link");
+    if(!isValidLink) return alert('Please provide a valid Amazon link');
 
     try {
       setIsLoading(true);
@@ -45,11 +45,11 @@ const SearchBar = () => {
         router.push(productUrl);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }finally{
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form 
@@ -70,7 +70,7 @@ const SearchBar = () => {
         {isLoading ? 'Searching' : 'Search'}
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;
