@@ -1,6 +1,7 @@
 "use client";
 import { scrapeAndStoreProduct } from "@/lib/actions";
 import { FormEvent, useState } from "react";
+import { useRouter } from 'next/navigation';
 
 const isValidProductUrl = (url: string) => {
 
@@ -25,6 +26,7 @@ const isValidProductUrl = (url: string) => {
 const SearchBar = () => {
   const [searchPrompt, setSearchPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +38,12 @@ const SearchBar = () => {
       setIsLoading(true);
 
       //scrape the product
-      const product = await scrapeAndStoreProduct(searchPrompt);
+      const productUrl = await scrapeAndStoreProduct(searchPrompt);
+      
+      //redirect to product page
+      if(productUrl){
+        router.push(productUrl);
+      }
     } catch (error) {
       console.log(error)
     }finally{
