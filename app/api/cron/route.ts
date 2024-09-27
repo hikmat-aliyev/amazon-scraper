@@ -24,10 +24,13 @@ export async function GET(request: Request) {
         // Scrape product
         const scrapedProduct = await scrapeAmazonProduct(currentProduct.url);
 
-        if (!scrapedProduct) return;
+        if (!scrapedProduct || !scrapedProduct.currentPrice) {
+          console.error(`Failed to scrape product or price is missing for ${currentProduct.url}`);
+          return;
+        }
 
         const updatedPriceHistory = [
-          ...currentProduct.priceHistory,
+          ...(currentProduct.priceHistory || []),
           {
             price: scrapedProduct.currentPrice,
           },
