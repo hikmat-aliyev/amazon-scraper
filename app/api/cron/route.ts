@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifyType } from '@/lib/utils';
-import { connectToDB } from '@/lib/mongoose';
-import Product from '@/lib/models/product.model';
-import { scrapeAmazonProduct } from '@/lib/scraper';
-import { generateEmailBody, sendEmail } from '@/lib/nodemailer';
+import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifType } from "@/lib/utils";
+import { connectToDB } from "@/lib/mongoose";
+import Product from "@/lib/models/product.model";
+import { scrapeAmazonProduct } from "@/lib/scraper";
+import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 
-export const maxDuration = 60; // This function can run for a maximum of 300 seconds
-export const dynamic = 'force-dynamic';
+export const maxDuration = 300; // This function can run for a maximum of 300 seconds
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET(request: Request) {
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     const products = await Product.find({});
 
-    if (!products) throw new Error('No product fetched');
+    if (!products) throw new Error("No product fetched");
 
     // ======================== 1 SCRAPE LATEST PRODUCT DETAILS & UPDATE DB
     const updatedProducts = await Promise.all(
@@ -50,18 +50,18 @@ export async function GET(request: Request) {
         );
 
         // ======================== 2 CHECK EACH PRODUCT'S STATUS & SEND EMAIL ACCORDINGLY
-        const emailNotifyType = getEmailNotifyType(
+        const emailNotifType = getEmailNotifType(
           scrapedProduct,
           currentProduct
         );
 
-        if (emailNotifyType && updatedProduct.users.length > 0) {
+        if (emailNotifType && updatedProduct.users.length > 0) {
           const productInfo = {
             title: updatedProduct.title,
             url: updatedProduct.url,
           };
           // Construct emailContent
-          const emailContent = await generateEmailBody(productInfo, emailNotifyType);
+          const emailContent = await generateEmailBody(productInfo, emailNotifType);
           // Get array of user emails
           const userEmails = updatedProduct.users.map((user: any) => user.email);
           // Send email notification
@@ -73,7 +73,7 @@ export async function GET(request: Request) {
     );
 
     return NextResponse.json({
-      message: 'Ok',
+      message: "Ok",
       data: updatedProducts,
     });
   } catch (error: any) {
