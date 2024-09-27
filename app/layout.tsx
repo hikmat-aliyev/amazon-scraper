@@ -3,6 +3,11 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 
+//vercel web analytics
+import { inject } from '@vercel/analytics';
+ 
+inject();
+
 const inter = Inter({ subsets: ['latin'] });
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
