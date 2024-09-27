@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifType } from "@/lib/utils";
+import { getLowestPrice, getHighestPrice, getAveragePrice, getEmailNotifyType } from "@/lib/utils";
 import { connectToDB } from "@/lib/mongoose";
 import Product from "@/lib/models/product.model";
 import { scrapeAmazonProduct } from "@/lib/scraper";
@@ -50,18 +50,18 @@ export async function GET(request: Request) {
         );
 
         // ======================== 2 CHECK EACH PRODUCT'S STATUS & SEND EMAIL ACCORDINGLY
-        const emailNotifType = getEmailNotifType(
+        const emailNotifyType = getEmailNotifyType(
           scrapedProduct,
           currentProduct
         );
 
-        if (emailNotifType && updatedProduct.users.length > 0) {
+        if (emailNotifyType && updatedProduct.users.length > 0) {
           const productInfo = {
             title: updatedProduct.title,
             url: updatedProduct.url,
           };
           // Construct emailContent
-          const emailContent = await generateEmailBody(productInfo, emailNotifType);
+          const emailContent = await generateEmailBody(productInfo, emailNotifyType);
           // Get array of user emails
           const userEmails = updatedProduct.users.map((user: any) => user.email);
           // Send email notification
