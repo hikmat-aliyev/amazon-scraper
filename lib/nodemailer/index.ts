@@ -96,9 +96,23 @@ export async function sendEmail(emailContent: EmailContent, sendTo: string[]) {
     subject: emailContent.subject
   };
 
-  transporter.sendMail(mailOptions, (error: any, info: any) => {
-    if(error) console.log(error);
+  // transporter.sendMail(mailOptions, (error: any, info: any) => {
+  //   if(error) console.log(error);
 
+  //   console.log('Email sent', info);
+  // });
+
+  try {
+    const info = await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(info);
+      });
+    });
     console.log('Email sent', info);
-  });
+  } catch (error) {
+    console.error('Error sending email', error);
+  }
 }
