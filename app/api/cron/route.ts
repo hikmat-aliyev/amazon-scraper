@@ -23,7 +23,7 @@
         products.map(async (currentProduct) => {
           // Scrape product
           const scrapedProduct = await scrapeAmazonProduct(currentProduct.url);
-
+          console.log('Scraped Product:', scrapedProduct);
 
           if (!scrapedProduct || !scrapedProduct.currentPrice) {
             console.error(`Failed to scrape product or price is missing for ${currentProduct.url}`);
@@ -81,6 +81,7 @@
         data: updatedProducts,
       });
     } catch (error: any) {
+      console.error(`Error occurred: ${error}`);
       throw new Error(`Failed to get all products: ${error.message}`);
     }
   }
