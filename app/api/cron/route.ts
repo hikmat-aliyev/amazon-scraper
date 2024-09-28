@@ -24,7 +24,9 @@ export async function GET(request: Request) {
         // Scrape product
         const scrapedProduct = await scrapeAmazonProduct(currentProduct.url);
 
+
         if (!scrapedProduct || !scrapedProduct.currentPrice) {
+          console.log(scrapedProduct);
           console.error(`Failed to scrape product or price is missing for ${currentProduct.url}`);
           return;
         }
